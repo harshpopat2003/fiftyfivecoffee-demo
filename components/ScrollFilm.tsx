@@ -5,6 +5,9 @@ import { useGSAP } from "@gsap/react";
 import { gsap, prefersReducedMotion, registerGsap } from "@/lib/motion";
 import { signature } from "@/lib/content";
 
+// next/image rewrites its own URLs for basePath; a plain <video> does not.
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 /**
  * The scroll-driven turntable.
  *
@@ -112,8 +115,8 @@ export default function ScrollFilm() {
       <div className="absolute inset-0 flex items-center justify-center">
         <video
           ref={video}
-          src="/assets/lineup-scrub.mp4"
-          poster="/assets/lineup-poster.jpg"
+          src={`${BASE_PATH}/assets/lineup-scrub.mp4`}
+          poster={`${BASE_PATH}/assets/lineup-poster.jpg`}
           muted
           playsInline
           preload="auto"
