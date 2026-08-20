@@ -1,0 +1,239 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* ---------------------------------------------------------------
+   55coffee — design tokens
+
+   Palette pulled from the live brand (espresso black / coffee brown
+   / warm cream) and pushed darker at the bottom end so the pinned,
+   full-bleed sections have somewhere properly black to sit against.
+----------------------------------------------------------------*/
+@theme {
+  --color-void: #0a0605;
+  --color-ink: #150e0a;
+  --color-ink-soft: #241812;
+  --color-cream: #f5efe5;
+  --color-cream-deep: #eadfcd;
+  --color-coffee: #6f4e37;
+  --color-caramel: #e8a45c;
+  --color-clay: #c98a4b;
+  --color-sand: #b98c55;
+  --color-muted: #8c7663;
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Lenis drives the scroll, so the native smooth behaviour has to go
+     or the two interpolators tear against each other. */
+  html {
+    scroll-behavior: auto;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 0.92;
+    text-wrap: balance;
+  }
+
+  em {
+    font-style: normal;
+    color: var(--color-clay);
+  }
+
+  ::selection {
+    background: var(--color-caramel);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  /* Fluid display type — one ramp used across every section head. */
+  .h-mega {
+    font-size: clamp(3.25rem, 12vw, 11rem);
+    line-height: 0.84;
+    letter-spacing: -0.05em;
+  }
+
+  /* The hero headline is a full sentence per line, not one word, so it
+     needs its own ramp — h-mega would run ~1850px wide in a 1150px
+     column and wrap mid-phrase. */
+  .h-hero {
+    font-size: clamp(2.35rem, 6.4vw, 5.75rem);
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+  }
+
+  .h-display {
+    font-size: clamp(2.75rem, 8vw, 7rem);
+  }
+
+  .h-section {
+    font-size: clamp(2.25rem, 5.5vw, 4.5rem);
+  }
+
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-coffee);
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 4rem);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 1rem 1.75rem;
+    transition:
+      transform 0.45s var(--ease-out-expo),
+      background-color 0.35s var(--ease-out-soft),
+      color 0.35s var(--ease-out-soft),
+      border-color 0.35s var(--ease-out-soft);
+    will-change: transform;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn-solid {
+    background: var(--color-ink);
+    color: var(--color-cream);
+  }
+
+  .btn-solid:hover {
+    background: var(--color-coffee);
+  }
+
+  .btn-accent {
+    background: var(--color-caramel);
+    color: var(--color-ink);
+  }
+
+  .btn-accent:hover {
+    background: var(--color-clay);
+  }
+
+  .btn-ghost {
+    border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+    color: currentColor;
+  }
+
+  .btn-ghost:hover {
+    border-color: currentColor;
+    background: currentColor;
+  }
+
+  /* Inverts against whatever `color` the button inherited. */
+  .btn-ghost:hover > span {
+    mix-blend-mode: difference;
+    filter: invert(1);
+  }
+
+  .btn-lg {
+    padding: 1.15rem 2.25rem;
+    font-size: 1rem;
+  }
+
+  .btn-sm {
+    padding: 0.7rem 1.25rem;
+    font-size: 0.8rem;
+  }
+
+  /* Fine film grain over the dark cinematic sections. Pure CSS so it
+     costs nothing to ship and never blocks the first paint. */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+}
+
+@layer utilities {
+  /* Elements animated by GSAP start hidden so there is no flash of
+     un-animated content before the timeline attaches. */
+  .gs-hide {
+    visibility: hidden;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  /* Pinned sections are composited constantly — promote them once
+     rather than letting the browser re-decide every frame. */
+  .will-transform {
+    will-change: transform;
+  }
+
+  .text-stroke {
+    -webkit-text-stroke: 1px color-mix(in srgb, currentColor 35%, transparent);
+    color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gs-hide {
+    visibility: visible !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
